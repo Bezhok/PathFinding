@@ -17,7 +17,6 @@
               <e p="UnityAPIWrapper.cs" t="Include" />
             </e>
           </e>
-          <e p="Messenger.cs" t="Include" />
           <e p="Priority Queue" t="Include">
             <e p="FastPriorityQueue.cs" t="Include" />
             <e p="FastPriorityQueueNode.cs" t="Include" />
@@ -36,8 +35,15 @@
         <e p="src" t="Include">
           <e p="Cell.cs" t="Include" />
           <e p="CellContent.cs" t="Include" />
+          <e p="EnumMessenger" t="Include">
+            <e p="GameEvent.cs" t="Include" />
+            <e p="Messenger.cs" t="Include" />
+          </e>
           <e p="GridManager.cs" t="Include" />
-          <e p="PathFinder.cs" t="Include" />
+          <e p="Path" t="Include">
+            <e p="PathFinder.cs" t="Include" />
+            <e p="Vector3M.cs" t="Include" />
+          </e>
         </e>
       </e>
       <e p="obj" t="ExcludeRecursive" />

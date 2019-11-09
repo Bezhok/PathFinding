@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using src.EnumMessenger;
 using UnityEngine;
 
 namespace src
@@ -9,13 +10,12 @@ namespace src
         private static Dictionary<CellContent, Color> _colors;
         private CellContent _content = CellContent.Empty;
         private Renderer _renderer;
-
-        private Vector3Int pos;
+        private Vector3Int _pos;
 
         public Vector3Int Pos
         {
-            get => pos;
-            set => pos = value;
+            get => _pos;
+            set => _pos = value;
         }
 
         public Renderer Renderer => _renderer;
@@ -45,22 +45,23 @@ namespace src
                 _colors[CellContent.Player] = Color.blue;
                 _colors[CellContent.Wall] = Color.black;
                 _colors[CellContent.Goal] = Color.green;
-            } 
+            }
         }
 
         public bool CanMakeMove()
         {
             return Content == CellContent.Empty;
         }
-        
-        public static PathFinder p;
+
         private void OnMouseOver()
         {
-            if(Input.GetMouseButtonDown(0))
-                Content = CellContent.Wall;
-            if(Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(0))
             {
-                p.Find(new Vector3Int(0,0, 0), pos);
+                Content = CellContent.Wall;
+            }
+            if (Input.GetMouseButtonDown(1))
+            {
+                Messenger<Vector3Int>.Broadcast(GameEvent.GOAL_CHANGED, _pos);
             }
         }
     }

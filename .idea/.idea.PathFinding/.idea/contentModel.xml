@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\cheki\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\cheki\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_PathFinding.-626839580.00" t="ExcludeRecursive" />
+    <e p="C:\Users\cheki\Documents\unity\PathFinding" t="IncludeRecursive">
+      <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Plugins" t="Include">
+          <e p="GitHub" t="Include">
+            <e p="Editor" t="Include">
+              <e p="credits.txt" t="Include" />
+              <e p="eula.txt" t="Include" />
+              <e p="ExtensionLoader.cs" t="Include" />
+              <e p="UnityAPIWrapper.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Messenger.cs" t="Include" />
+          <e p="Priority Queue" t="Include">
+            <e p="FastPriorityQueue.cs" t="Include" />
+            <e p="FastPriorityQueueNode.cs" t="Include" />
+            <e p="GenericPriorityQueue.cs" t="Include" />
+            <e p="GenericPriorityQueueNode.cs" t="Include" />
+            <e p="IFixedSizePriorityQueue.cs" t="Include" />
+            <e p="IPriorityQueue.cs" t="Include" />
+            <e p="Properties" t="Include">
+              <e p="AssemblyInfo.cs" t="Include" />
+            </e>
+            <e p="SimplePriorityQueue.cs" t="Include" />
+            <e p="StablePriorityQueue.cs" t="Include" />
+            <e p="StablePriorityQueueNode.cs" t="Include" />
+          </e>
+        </e>
+        <e p="src" t="Include">
+          <e p="Cell.cs" t="Include" />
+          <e p="CellContent.cs" t="Include" />
+          <e p="GridManager.cs" t="Include" />
+          <e p="PathFinder.cs" t="Include" />
+        </e>
+      </e>
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Packages" t="ExcludeRecursive" />
+      <e p="PathFinding.sln" t="IncludeFlat" />
+      <e p="Temp\bin" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>

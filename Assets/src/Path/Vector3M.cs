@@ -19,7 +19,7 @@ namespace src.Path
             v = pos;
         }
 
-        static private int[,] Mask =
+        static private int[,] NeighbourMask =
         {
             {1, 0, 0},
             {-1, 0, 0},
@@ -35,9 +35,9 @@ namespace src.Path
             var neighbours = new List<Vector3M>();
 
             Vector3M vec;
-            for (int i = 0; i < Mask.GetLength(0); i++)
+            for (int i = 0; i < NeighbourMask.GetLength(0); i++)
             {
-                vec = new Vector3M(v.x + Mask[i, 0], v.y + Mask[i, 1], v.z + Mask[i, 2]);
+                vec = new Vector3M(v.x + NeighbourMask[i, 0], v.y + NeighbourMask[i, 1], v.z + NeighbourMask[i, 2]);
                 if (gridManager.CanMakeMove(vec.v.x, vec.v.y, vec.v.z))
                     neighbours.Add(vec);
             }

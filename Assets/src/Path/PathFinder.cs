@@ -37,13 +37,13 @@ namespace src.Path
             {
                 var current = _priorityQueue.Dequeue();
 
-                if (current.v.x == goal.v.x && current.v.y == goal.v.y)
+                bool isGoal = current.v.x == goal.v.x && current.v.y == goal.v.y;
+                if (isGoal)
                 {
                     var list = new List<Vector3M>();
                     var prev = goal;
                     while (prev != null)
                     {
-//                        _gridManager.Map[prev.v.x, prev.v.y].Renderer.material.color = Color.yellow;
                         list.Add(prev);
                         prev = _cameFrom[prev];
                     }
@@ -55,14 +55,9 @@ namespace src.Path
                 {
                     int newPathCost = _pathCost[current] + 1;
 
-                    if (!_cameFrom.ContainsKey(node) || newPathCost < _pathCost[node])
+                    bool isVisited = _cameFrom.ContainsKey(node);
+                    if (!isVisited || newPathCost < _pathCost[node])
                     {
-                        _gridManager.Map[node.v.x, node.v.y].Renderer.material.color = Color.magenta;
-                        if (!_cameFrom.ContainsKey(node))
-                        {
-                            _gridManager.Map[node.v.x, node.v.y].Renderer.material.color = Color.cyan;
-                        }
-
                         int priority = newPathCost + Euristic(node, goal);
                         _priorityQueue.Enqueue(node, priority);
                         _pathCost[node] = newPathCost;

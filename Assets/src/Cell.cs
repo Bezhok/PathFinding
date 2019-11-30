@@ -53,6 +53,14 @@ namespace src
             return Content == CellContent.Empty;
         }
 
+        public void UpdateColor()
+        {
+            if (Renderer.material.color != _colors[_content])
+            {
+                Renderer.material.color = _colors[_content];
+            }
+        }
+        
         private void OnMouseOver()
         {
             if (Input.GetMouseButtonDown(0))

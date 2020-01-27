@@ -156,7 +156,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.23820755, g: 0.3649702, b: 0.5, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -249,5 +249,5 @@ MonoBehaviour:
   _cell: {fileID: 83057609326081579, guid: 5736eb664c4acae41998ac06e1ae8fcb, type: 3}
   xStart: -8.34
   yStart: 4.44
-  xCells: 35
-  yCells: 19
+  xCells: 32
+  yCells: 18

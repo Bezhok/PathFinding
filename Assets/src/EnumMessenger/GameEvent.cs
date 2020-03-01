@@ -2,6 +2,6 @@
 {
     public enum GameEvent
     {
-        GOAL_CHANGED
+        GoalChanged
     }
 }

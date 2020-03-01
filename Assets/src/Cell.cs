@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using src.EnumMessenger;
 using UnityEngine;
 
@@ -9,16 +8,10 @@ namespace src
     {
         private static Dictionary<CellContent, Color> _colors;
         private CellContent _content = CellContent.Empty;
-        private Renderer _renderer;
-        private Vector3Int _pos;
 
-        public Vector3Int Pos
-        {
-            get => _pos;
-            set => _pos = value;
-        }
+        public Vector3Int Pos { get; set; }
 
-        public Renderer Renderer => _renderer;
+        public Renderer Renderer { get; private set; }
 
         public CellContent Content
         {
@@ -33,19 +26,19 @@ namespace src
         private void Awake()
         {
             InitColors();
-            _renderer = GetComponent<Renderer>();
+            Renderer = GetComponent<Renderer>();
         }
 
         private void InitColors()
         {
             if (_colors == null)
-            {
-                _colors = new Dictionary<CellContent, Color>();
-                _colors[CellContent.Empty] = Color.white;
-                _colors[CellContent.Player] = Color.blue;
-                _colors[CellContent.Wall] = Color.black;
-                _colors[CellContent.Goal] = Color.green;
-            }
+                _colors = new Dictionary<CellContent, Color>
+                {
+                    [CellContent.Empty] = Color.white,
+                    [CellContent.Player] = Color.blue,
+                    [CellContent.Wall] = Color.black,
+                    [CellContent.Goal] = Color.green
+                };
         }
 
         public bool CanMakeMove()
@@ -55,22 +48,13 @@ namespace src
 
         public void UpdateColor()
         {
-            if (Renderer.material.color != _colors[_content])
-            {
-                Renderer.material.color = _colors[_content];
-            }
+            if (Renderer.material.color != _colors[_content]) Renderer.material.color = _colors[_content];
         }
-        
+
         private void OnMouseOver()
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                Content = CellContent.Wall;
-            }
-            if (Input.GetMouseButtonDown(1))
-            {
-                Messenger<Vector3Int>.Broadcast(GameEvent.GOAL_CHANGED, _pos);
-            }
+            if (Input.GetMouseButtonDown(0)) Content = CellContent.Wall;
+            if (Input.GetMouseButtonDown(1)) Messenger<Vector3Int>.Broadcast(GameEvent.GoalChanged, Pos);
         }
     }
 }

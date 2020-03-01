@@ -36,7 +36,7 @@ namespace src.Path
             return list;
         }
 
-        public List<Vector3M> Find(Vector3M start, Vector3M goal)
+        private List<Vector3M> Find(Vector3M start, Vector3M goal)
         {
             _priorityQueue.Clear();
             _cameFrom.Clear();
@@ -50,7 +50,7 @@ namespace src.Path
             {
                 var current = _priorityQueue.Dequeue();
 
-                var isGoal = current.v.x == goal.v.x && current.v.y == goal.v.y;
+                var isGoal = current.V.x == goal.V.x && current.V.y == goal.V.y;
                 if (isGoal) return RestorePath(goal);
 
                 foreach (var node in current.Neighbours(_gridManager))
@@ -73,8 +73,8 @@ namespace src.Path
 
         private int Euristic(in Vector3M start, in Vector3M goal)
         {
-            var dx = start.v.x - goal.v.x;
-            var dy = start.v.y - goal.v.y;
+            var dx = start.V.x - goal.V.x;
+            var dy = start.V.y - goal.V.y;
             return dx * dx + dy * dy;
         }
     }

@@ -7,11 +7,11 @@ namespace src.Path
 {
     public class PathFinder
     {
-        private SimplePriorityQueue<Vector3M> _priorityQueue = new SimplePriorityQueue<Vector3M>();
-        private Dictionary<Vector3M, Vector3M> _cameFrom = new Dictionary<Vector3M, Vector3M>();
-        private Dictionary<Vector3M, int> _pathCost = new Dictionary<Vector3M, int>();
+        private readonly Dictionary<Vector3M, Vector3M> _cameFrom = new Dictionary<Vector3M, Vector3M>();
 
-        private GridManager _gridManager;
+        private readonly GridManager _gridManager;
+        private readonly Dictionary<Vector3M, int> _pathCost = new Dictionary<Vector3M, int>();
+        private readonly SimplePriorityQueue<Vector3M> _priorityQueue = new SimplePriorityQueue<Vector3M>();
 
         public PathFinder(GridManager grid)
         {
@@ -23,7 +23,20 @@ namespace src.Path
             return Find(new Vector3M(start), new Vector3M(goal));
         }
 
-        List<Vector3M> Find(Vector3M start, Vector3M goal)
+        private List<Vector3M> RestorePath(Vector3M goal)
+        {
+            var list = new List<Vector3M>();
+            var prev = goal;
+            while (prev != null)
+            {
+                list.Add(prev);
+                prev = _cameFrom[prev];
+            }
+
+            return list;
+        }
+
+        public List<Vector3M> Find(Vector3M start, Vector3M goal)
         {
             _priorityQueue.Clear();
             _cameFrom.Clear();
@@ -37,41 +50,31 @@ namespace src.Path
             {
                 var current = _priorityQueue.Dequeue();
 
-                bool isGoal = current.v.x == goal.v.x && current.v.y == goal.v.y;
-                if (isGoal)
-                {
-                    var list = new List<Vector3M>();
-                    var prev = goal;
-                    while (prev != null)
-                    {
-                        list.Add(prev);
-                        prev = _cameFrom[prev];
-                    }
-
-                    return list;
-                }
+                var isGoal = current.v.x == goal.v.x && current.v.y == goal.v.y;
+                if (isGoal) return RestorePath(goal);
 
                 foreach (var node in current.Neighbours(_gridManager))
                 {
-                    int newPathCost = _pathCost[current] + 1;
+                    var newPathCost = _pathCost[current] + 1;
 
-                    bool isVisited = _cameFrom.ContainsKey(node);
+                    var isVisited = _cameFrom.ContainsKey(node);
                     if (!isVisited || newPathCost < _pathCost[node])
                     {
-                        int priority = newPathCost + Euristic(node, goal);
+                        var priority = newPathCost + Euristic(node, goal);
                         _priorityQueue.Enqueue(node, priority);
                         _pathCost[node] = newPathCost;
                         _cameFrom[node] = current;
                     }
                 }
             }
+
             return null;
         }
 
         private int Euristic(in Vector3M start, in Vector3M goal)
         {
-            int dx = start.v.x - goal.v.x;
-            int dy = start.v.y - goal.v.y;
+            var dx = start.v.x - goal.v.x;
+            var dy = start.v.y - goal.v.y;
             return dx * dx + dy * dy;
         }
     }

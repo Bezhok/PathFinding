@@ -7,58 +7,59 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    public int ColumnsNumber => _map.GetLength(0);
-
-    public int RowsNumber => _map.GetLength(1);
+    private const float TimePerMove = 0.02f;
 
     [SerializeField] private GameObject _cell;
-    [SerializeField] private float xStart;
-    [SerializeField] private float yStart;   
-    [SerializeField] private int xCells = 32;
-    [SerializeField] private int yCells = 16;
-    
-    
-    private PathFinder _pathFinder;
-    private Cell[,] _map;
     private List<Vector3M> _path;
 
-    public Cell[,] Map
-    {
-        get => _map;
-        set => _map = value;
-    }
+
+    private PathFinder _pathFinder;
 
     private Vector3Int _startPlayerPos;
 
-    void Start()
+    private float _timeSummer;
+    [SerializeField] private int xCells = 32;
+    [SerializeField] private float xStart;
+    [SerializeField] private int yCells = 16;
+    [SerializeField] private float yStart;
+    public int ColumnsNumber => Map.GetLength(0);
+
+    public int RowsNumber => Map.GetLength(1);
+
+    public Cell[,] Map { get; set; }
+
+    private void InstantiateMap()
+    {
+        Map = new Cell[xCells, yCells];
+
+        var vertExtent = 2 * Camera.main.orthographicSize;
+        var horzExtent = vertExtent * Screen.width / Screen.height;
+
+        var offsetScaller = 1.04f;
+        var scaller = (horzExtent - 0.04f) / (ColumnsNumber * offsetScaller);
+        xStart -= (1 - scaller) / 2;
+        yStart += (1 - scaller) / 2;
+        for (var i = 0; i < ColumnsNumber; i++)
+        for (var j = 0; j < RowsNumber; j++)
+        {
+            var obj = Instantiate(_cell,
+                new Vector3(xStart + i * offsetScaller * scaller, yStart - j * offsetScaller * scaller),
+                Quaternion.identity);
+            obj.name = $"x:{i}, y:{j}";
+
+            obj.transform.localScale = new Vector3(scaller, scaller, scaller);
+            Map[i, j] = obj.GetComponent<Cell>();
+            Map[i, j].Pos = new Vector3Int(i, j, 0);
+        }
+    }
+
+    private void Start()
     {
         Messenger<Vector3Int>.AddListener(GameEvent.GOAL_CHANGED, OnGoalChanged);
 
-        _map = new Cell[xCells, yCells];
-
-        var vertExtent = 2*Camera.main.orthographicSize;
-        var horzExtent = vertExtent * Screen.width / Screen.height;
-
-        float offsetScaller = 1.04f;
-        float scaller = (horzExtent-0.04f) / (ColumnsNumber * offsetScaller);
-        xStart -= (1 - scaller) / 2;
-        yStart += (1 - scaller) / 2;
-        for (int i = 0; i < ColumnsNumber; i++)
-        {
-            for (int j = 0; j < RowsNumber; j++)
-            {
-                GameObject obj = Instantiate(_cell,
-                    new Vector3(xStart + i * offsetScaller * scaller, yStart - j * offsetScaller * scaller),
-                    Quaternion.identity);
-                obj.name = $"x:{i}, y:{j}";
-                
-                obj.transform.localScale = new Vector3(scaller, scaller, scaller);
-                _map[i, j] = obj.GetComponent<Cell>();
-                _map[i, j].Pos = new Vector3Int(i, j, 0);
-            }
-        }
-
+        InstantiateMap();
         GenerateLevel();
+        
         _pathFinder = new PathFinder(this);
     }
 
@@ -68,52 +69,42 @@ public class GridManager : MonoBehaviour
         VerticalGenerator(5, 1, RowsNumber - 1);
         VerticalGenerator(10, 1, RowsNumber - 1);
         VerticalGenerator(13, 1, RowsNumber - 1);
-        
+
         if (ColumnsNumber >= 20)
         {
             HorizontalGenerator(5, 15, 26);
             HorizontalGenerator(10, 15, 26);
         }
-        
+
         VerticalGenerator(15, 5, 10);
         VerticalGenerator(26, 5, 10);
-        
-        _map[16, 10].Content = CellContent.Empty;
+
+        Map[16, 10].Content = CellContent.Empty;
     }
 
-    void VerticalGenerator(int x, int startY, int endY)
+    private void VerticalGenerator(int x, int startY, int endY)
     {
-        for (int y = startY; y <= endY; y++)
-        {
-            _map[x, y].Content = CellContent.Wall;
-        }
+        for (var y = startY; y <= endY; y++) Map[x, y].Content = CellContent.Wall;
     }
-    
-    void HorizontalGenerator(int y, int startX, int endX)
+
+    private void HorizontalGenerator(int y, int startX, int endX)
     {
-        for (int x = startX; x <= endX; x++)
-        {
-            _map[x, y].Content = CellContent.Wall;
-        }
+        for (var x = startX; x <= endX; x++) Map[x, y].Content = CellContent.Wall;
     }
-    
+
     public bool CanMakeMove(int x, int y, int z)
     {
-        bool isValidRange = x >= 0 && y >= 0 && x < ColumnsNumber && y < RowsNumber;
-        return isValidRange && _map[x, y].CanMakeMove();
+        var isValidRange = x >= 0 && y >= 0 && x < ColumnsNumber && y < RowsNumber;
+        return isValidRange && Map[x, y].CanMakeMove();
     }
 
     public void ResetColors()
     {
-        for (int i = 0; i < ColumnsNumber; i++)
-        {
-            for (int j = 0; j < RowsNumber; j++)
-            {
-                _map[i, j].UpdateColor();
-            }
-        }
+        for (var i = 0; i < ColumnsNumber; i++)
+        for (var j = 0; j < RowsNumber; j++)
+            Map[i, j].UpdateColor();
     }
-    
+
     private void OnGoalChanged(Vector3Int pos)
     {
         ResetColors();
@@ -121,19 +112,13 @@ public class GridManager : MonoBehaviour
         _startPlayerPos = pos;
     }
 
-    private float _timeSummer;
-    private const float TimePerMove = 0.02f;
-
     private void Update()
     {
-        if (_path == null || !_path.Any())
-        {
-            _path = null;
-        }
+        if (_path == null || !_path.Any()) _path = null;
 
         if (_path != null)
         {
-            int moves = 0;
+            var moves = 0;
             _timeSummer += Time.deltaTime;
             while (_timeSummer >= TimePerMove)
             {
@@ -144,7 +129,7 @@ public class GridManager : MonoBehaviour
             while (moves != 0 && _path.Any())
             {
                 var pos = _path[_path.Count - 1];
-                _map[pos.v.x, pos.v.y].Renderer.material.color = Color.green;
+                Map[pos.v.x, pos.v.y].Renderer.material.color = Color.green;
                 _path.RemoveAt(_path.Count - 1);
                 moves--;
             }

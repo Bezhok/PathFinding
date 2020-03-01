@@ -31,7 +31,7 @@ namespace src.Path
         {
             var neighbours = new List<Vector3M>();
 
-            for (var i = 0; i < NeighbourMask.GetLength(0); i++)
+            for (int i = 0; i < NeighbourMask.GetLength(0); i++)
             {
                 var vec = new Vector3M(V.x + NeighbourMask[i, 0], V.y + NeighbourMask[i, 1], V.z + NeighbourMask[i, 2]);
                 if (gridManager.CanMakeMove(vec.V.x, vec.V.y, vec.V.z))

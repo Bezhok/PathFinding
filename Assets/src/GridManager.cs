@@ -33,17 +33,17 @@ namespace src
         {
             Map = new Cell[xCells, yCells];
 
-            var vertExtent = 2 * Camera.main.orthographicSize;
-            var horizExtent = vertExtent * Screen.width / Screen.height;
+            float vertExtent = 2 * Camera.main.orthographicSize;
+            float horizExtent = vertExtent * Screen.width / Screen.height;
 
-            var offsetScale = 1.04f;
-            var scale = (horizExtent - 0.04f) / (ColumnsNumber * offsetScale);
+            float offsetScale = 1.04f;
+            float scale = (horizExtent - 0.04f) / (ColumnsNumber * offsetScale);
             xStart -= (1 - scale) / 2;
             yStart += (1 - scale) / 2;
-            for (var i = 0; i < ColumnsNumber; i++)
-            for (var j = 0; j < RowsNumber; j++)
+            for (int i = 0; i < ColumnsNumber; i++)
+            for (int j = 0; j < RowsNumber; j++)
             {
-                var obj = Instantiate(_cell,
+                GameObject obj = Instantiate(_cell,
                     new Vector3(xStart + i * offsetScale * scale, yStart - j * offsetScale * scale),
                     Quaternion.identity);
                 obj.name = $"x:{i}, y:{j}";
@@ -60,7 +60,7 @@ namespace src
 
             InstantiateMap();
             GenerateLevel();
-        
+
             _pathFinder = new PathFinder(this);
         }
 
@@ -85,24 +85,24 @@ namespace src
 
         private void VerticalGenerator(int x, int startY, int endY)
         {
-            for (var y = startY; y <= endY; y++) Map[x, y].Content = CellContent.Wall;
+            for (int y = startY; y <= endY; y++) Map[x, y].Content = CellContent.Wall;
         }
 
         private void HorizontalGenerator(int y, int startX, int endX)
         {
-            for (var x = startX; x <= endX; x++) Map[x, y].Content = CellContent.Wall;
+            for (int x = startX; x <= endX; x++) Map[x, y].Content = CellContent.Wall;
         }
 
         public bool CanMakeMove(int x, int y, int z)
         {
-            var isValidRange = x >= 0 && y >= 0 && x < ColumnsNumber && y < RowsNumber;
+            bool isValidRange = x >= 0 && y >= 0 && x < ColumnsNumber && y < RowsNumber;
             return isValidRange && Map[x, y].CanMakeMove();
         }
 
         public void ResetColors()
         {
-            for (var i = 0; i < ColumnsNumber; i++)
-            for (var j = 0; j < RowsNumber; j++)
+            for (int i = 0; i < ColumnsNumber; i++)
+            for (int j = 0; j < RowsNumber; j++)
                 Map[i, j].UpdateColor();
         }
 
@@ -119,7 +119,7 @@ namespace src
 
             if (_path != null)
             {
-                var moves = 0;
+                int moves = 0;
                 _timeSummer += Time.deltaTime;
                 while (_timeSummer >= TimePerMove)
                 {
@@ -129,7 +129,7 @@ namespace src
 
                 while (moves != 0 && _path.Any())
                 {
-                    var pos = _path[_path.Count - 1];
+                    Vector3M pos = _path[_path.Count - 1];
                     Map[pos.V.x, pos.V.y].Renderer.material.color = Color.green;
                     _path.RemoveAt(_path.Count - 1);
                     moves--;

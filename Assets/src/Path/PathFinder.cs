@@ -26,7 +26,7 @@ namespace src.Path
         private List<Vector3M> RestorePath(Vector3M goal)
         {
             var list = new List<Vector3M>();
-            var prev = goal;
+            Vector3M prev = goal;
             while (prev != null)
             {
                 list.Add(prev);
@@ -48,19 +48,19 @@ namespace src.Path
 
             while (_priorityQueue.Any())
             {
-                var current = _priorityQueue.Dequeue();
+                Vector3M current = _priorityQueue.Dequeue();
 
-                var isGoal = current.V.x == goal.V.x && current.V.y == goal.V.y;
+                bool isGoal = current.V.x == goal.V.x && current.V.y == goal.V.y;
                 if (isGoal) return RestorePath(goal);
 
-                foreach (var node in current.Neighbours(_gridManager))
+                foreach (Vector3M node in current.Neighbours(_gridManager))
                 {
-                    var newPathCost = _pathCost[current] + 1;
+                    int newPathCost = _pathCost[current] + 1;
 
-                    var isVisited = _cameFrom.ContainsKey(node);
+                    bool isVisited = _cameFrom.ContainsKey(node);
                     if (!isVisited || newPathCost < _pathCost[node])
                     {
-                        var priority = newPathCost + Euristic(node, goal);
+                        int priority = newPathCost + Euristic(node, goal);
                         _priorityQueue.Enqueue(node, priority);
                         _pathCost[node] = newPathCost;
                         _cameFrom[node] = current;
@@ -73,8 +73,8 @@ namespace src.Path
 
         private int Euristic(in Vector3M start, in Vector3M goal)
         {
-            var dx = start.V.x - goal.V.x;
-            var dy = start.V.y - goal.V.y;
+            int dx = start.V.x - goal.V.x;
+            int dy = start.V.y - goal.V.y;
             return dx * dx + dy * dy;
         }
     }
